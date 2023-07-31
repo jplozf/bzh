@@ -8,4 +8,6 @@
 #include "stdio.h"
 #include "ctype.h"
 
+#include "zui/ZApplication.h"
+
 #endif
