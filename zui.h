@@ -29,6 +29,14 @@ class ZApplication;
 class ZScreen;
 class ZLabel;
 class ZInput;
+class ZBoard;
+class ZTitle;
+class ZHeader;
+class ZRows;
+class ZRow;
+class ZPrompt;
+class ZFooter;
+class ZStatusbar;
 
 //*****************************************************************************
 // Class ZApplication
@@ -82,11 +90,45 @@ public:
 //*****************************************************************************
 class ZInput {
 private:
-    /* data */
+
 public:
     ZInput(/* args */);
     ~ZInput();
+};
+
+
+//*****************************************************************************
+// Class ZTitle
+//*****************************************************************************
+class ZTitle {
+private:
+    ZBoard parent;
+public:
+    ZTitle(ZBoard parent);
+    setTitle(QString title);
+    ~ZTitle();
 
 };
 
+//*****************************************************************************
+// Class ZBoard
+//*****************************************************************************
+class ZBoard {
+private:
+    ZTitle zTitle;
+    ZHeader zHeader;
+    ZPrompt zPrompt;
+    ZRows zRows;
+    ZFooter zFooter;
+    ZStatusbar zStatusbar;
+
+public:
+    ZBoard();
+    ZBoard(QString title);
+    void setTitle(QString title);
+    void show();
+
+    ~ZBoard();
+
+};
 #endif // ZUI_H

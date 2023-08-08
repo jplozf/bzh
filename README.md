@@ -12,18 +12,14 @@
 ### Example
 ```
 int main(int argc, char *argv[]) {
-    ZScreen mainScreen = ZScreen();
-    ZInput txtPrompt = ZInput();
-    mainScreen.addField(txtPrompt);
-    ZApplication app = ZApplication(mainScreen);
-    int rc = app->start();
-
+    ZBoard zbMain = new ZBoard();
+    zbMain.setTitle("WRKOBJ");
+    
     return rc;
 }
 ```
 
 ### ZBoard
----
 ### ZTitle
 ### ZHeader
 ### ZRows
