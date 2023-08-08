@@ -40,7 +40,14 @@ static void driver(int ch)
 {
 	int i;
 
-	switch (ch) {
+    switch (ch) {
+        case KEY_F(4):
+            form_driver(form, REQ_NEXT_FIELD);
+            form_driver(form, REQ_PREV_FIELD);
+            move(LINES-3, 2);
+            printw("%s", trim_whitespaces((char *)current_field(form)->buf));
+            break;
+
 		case KEY_F(2):
 			// Or the current field buffer won't be sync with what is displayed
 			form_driver(form, REQ_NEXT_FIELD);
@@ -159,3 +166,16 @@ int main()
 
 	return 0;
 }
+
+/*
+int ZMain() {
+    ZScreen mainScreen = ZScreen();
+    ZTextInput txtPrompt = ZTextInput();
+    mainScreen.
+    ZApplication app = ZApplication(mainScreen);
+    app->start();
+
+
+    return 0;
+}
+*/
