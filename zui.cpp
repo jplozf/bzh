@@ -3,14 +3,14 @@
 //*****************************************************************************
 // ZApplication()
 //*****************************************************************************
-ZApplication::ZApplication(ZScreen *screen) {
+ZApplication::ZApplication() {
   initscr();
   cbreak();
   noecho();
   keypad(stdscr, TRUE);
-  this->mainWindow = newwin(24, 80, 0, 0);
+  getmaxxy(stdscr, maxrow, maxcol);
 
-  this->setScreen(screen);
+  this->mainWindow = newwin(maxrow, maxcol, 0, 0);
 }
 
 //*****************************************************************************
@@ -20,96 +20,11 @@ ZApplication::~ZApplication() {
   endwin();
 }
 
-//*****************************************************************************
-// setScreen()
-//*****************************************************************************
-void ZApplication::setScreen(ZScreen *screen) {
-  this->screen = screen;
-}
-
-//*****************************************************************************
-// ZLabel()
-//*****************************************************************************
-ZLabel::ZLabel(ZScreen *screen, QString label, int x, int y) {
-  this->screen = screen;
-  this->field = *new_field(1, label.length(), x, y, 0, 0);
-  field_opts_off(&this->field, O_STATIC);
-  set_field_opts(&this->field, O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
-  set_field_buffer(&this->field, 0, label.toStdString().c_str());
-  this->key = QUuid::createUuid().toString();
-}
-
-//*****************************************************************************
-// ~ZLabel()
-//*****************************************************************************
-ZLabel::~ZLabel() {
-  screen->fields.remove(this->key);
-  free_field(&this->field);
-}
-
-//****************************************************************************
-// setText()
-//*****************************************************************************
-void ZLabel::setText(QString label) {
-  set_field_buffer(&this->field, 0, label.toStdString().c_str());
-  set_field_buffer(&this->screen->fields[this->key], 0,
-                   label.toStdString().c_str());
-}
-
-//****************************************************************************
-// ZScreen()
-//*****************************************************************************
-ZScreen::ZScreen(WINDOW *parent) { this->parent = parent; }
-
-//****************************************************************************
-// ~ZScreen()
-//*****************************************************************************
-ZScreen::~ZScreen() {}
-
-//*****************************************************************************
-// show()
-//*****************************************************************************
-void ZScreen::show() {
-  int n = this->fields.count();
-  int i{0};
-  aFields = (FIELD *)malloc(n * sizeof(FIELD));
-  for (auto e : this->fields.keys()) {
-    aFields[i++] = this->fields.value(e);
-  }
-  this->form = new_form(&aFields);
-  set_form_win(this->form, this->parent);
-  post_form(this->form);
-  refresh();
-  wrefresh(this->parent);
-}
-
-/*
-//*****************************************************************************
-// addLabel()
-//*****************************************************************************
-void ZScreen::addLabel(ZLabel label) {
-  this->fields[label.key] = label.field;
-}
-*/
-
-//****************************************************************************
-// ZInput()
-//*****************************************************************************
-ZInput::ZInput(/* args */) {
-
-}
-
-//****************************************************************************
-// ~ZInput()
-//*****************************************************************************
-ZInput::~ZInput() {
-
-}
-
 //****************************************************************************
 // ZBoard()
 //*****************************************************************************
-ZBoard::ZBoard(/* args */) {
+ZBoard::ZBoard(ZApplication parent) {
+    this->parent = parent;
     this->zTitle = new ZTitle(this);
     this->zTitle.setTitle("");
 }
@@ -117,7 +32,8 @@ ZBoard::ZBoard(/* args */) {
 //****************************************************************************
 // ZBoard()
 //*****************************************************************************
-ZBoard::ZBoard(QString title) {
+ZBoard::ZBoard(ZApplication parent, QString title) {
+    this->parent = parent;
     this->zTitle = new ZTitle(this);
     this->zTitle.setTitle("");
 }
@@ -141,6 +57,16 @@ void ZBoard::setTitle(QString title) {
 //*****************************************************************************
 ZTitle::ZTitle(ZBoard parent) {
     this->parent = parent;
+    FIELD *field[3];
+
+    field[0] = new_field(1, 8, 0, 0);       // DATE
+    field[1] = new_field(1, 64, 0, 0);      // TITLE
+    field[2] = new_field(1, 8, 0, 0);       // HOUR
+
+    FIELD fdDate = *new_field(1, label.length(), x, y, 0, 0);
+    field_opts_off(&this->field, O_STATIC);
+    set_field_opts(&this->field, O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
+    set_field_buffer(&this->field, 0, label.toStdString().c_str());
 }
 
 //****************************************************************************
@@ -150,6 +76,20 @@ ZTitle::~ZTitle() {
 
 }
 
+//****************************************************************************
+// setTitle()
+//*****************************************************************************
+void ZTitle::setTitle(QString title) {
+    this->title = title;
+    this->refresh();
+}
+
+//****************************************************************************
+// refresh()
+//*****************************************************************************
+void ZTitle::refresh() {
+
+}
 /*
 int ZMain() {
     ZApplication app = ZApplication();

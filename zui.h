@@ -26,9 +26,6 @@
 // Forward declarations
 //*****************************************************************************
 class ZApplication;
-class ZScreen;
-class ZLabel;
-class ZInput;
 class ZBoard;
 class ZTitle;
 class ZHeader;
@@ -43,14 +40,14 @@ class ZStatusbar;
 //*****************************************************************************
 class ZApplication {
 private:
-    ZScreen *screen;
+    FORM *form;
     WINDOW *mainWindow;
+    int maxrow;
+    int maxcol;
 
 public:
-    ZApplication(ZScreen *screen);
+    ZApplication();
     ~ZApplication();
-    void setScreen(ZScreen *screen);
-    int start();
 };
 
 //*****************************************************************************
@@ -103,9 +100,16 @@ public:
 class ZTitle {
 private:
     ZBoard parent;
+    bool withDate{true};
+    bool withClock{true};
+    QString title;
+    void refresh();
+
 public:
     ZTitle(ZBoard parent);
-    setTitle(QString title);
+    void setTitle(QString title);
+    void showDate(bool flag);
+    void showClock(bool flag);
     ~ZTitle();
 
 };
@@ -121,10 +125,11 @@ private:
     ZRows zRows;
     ZFooter zFooter;
     ZStatusbar zStatusbar;
+    ZApplication parent;
 
 public:
-    ZBoard();
-    ZBoard(QString title);
+    ZBoard(ZApplication parent);
+    ZBoard(ZApplication parent, QString title);
     void setTitle(QString title);
     void show();
 
