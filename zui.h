@@ -16,11 +16,12 @@
 #ifndef ZUI_H
 #define ZUI_H
 
+#include <QDateTime>
+#include <QMap>
 #include <QString>
 #include <QUuid>
-#include <QMap>
-#include "ncurses/ncurses.h"
 #include "ncurses/form.h"
+#include "ncurses/ncurses.h"
 
 //*****************************************************************************
 // Forward declarations
@@ -51,62 +52,19 @@ public:
 };
 
 //*****************************************************************************
-// Class ZLabel
-//*****************************************************************************
-class ZLabel {
-private:
-
-public:
-    QString key;
-    FIELD field;
-    ZScreen *screen;
-    ZLabel(ZScreen *screen, QString label, int x, int y);
-    ~ZLabel();
-    void setText(QString label);
-};
-
-//*****************************************************************************
-// Class ZScreen
-//*****************************************************************************
-class ZScreen {
-private:
-    FORM *form;
-    FIELD *aFields;
-    WINDOW *parent;
-public:
-    ZScreen(WINDOW *parent);
-    ~ZScreen();
-    QMap<QString, FIELD> fields;
-    void addField(ZLabel label);
-    void addField(ZInput input);
-    void show();
-};
-
-//*****************************************************************************
-// Class ZInput
-//*****************************************************************************
-class ZInput {
-private:
-
-public:
-    ZInput(/* args */);
-    ~ZInput();
-};
-
-
-//*****************************************************************************
 // Class ZTitle
 //*****************************************************************************
 class ZTitle {
 private:
-    ZBoard parent;
+    ZBoard *parent;
     bool withDate{true};
     bool withClock{true};
     QString title;
     void refresh();
+    FIELD *field[3];
 
 public:
-    ZTitle(ZBoard parent);
+    ZTitle(ZBoard *parent);
     void setTitle(QString title);
     void showDate(bool flag);
     void showClock(bool flag);
@@ -125,11 +83,11 @@ private:
     ZRows zRows;
     ZFooter zFooter;
     ZStatusbar zStatusbar;
-    ZApplication parent;
+    ZApplication *parent;
 
 public:
-    ZBoard(ZApplication parent);
-    ZBoard(ZApplication parent, QString title);
+    ZBoard(ZApplication *parent);
+    ZBoard(ZApplication *parent, QString title);
     void setTitle(QString title);
     void show();
 
