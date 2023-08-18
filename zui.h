@@ -62,6 +62,7 @@ private:
     QString title;
     void refresh();
     FIELD *field[3];
+    FORM *form;
 
 public:
     ZTitle(ZBoard *parent);

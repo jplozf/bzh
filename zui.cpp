@@ -35,6 +35,7 @@ ZTitle::ZTitle(ZBoard *parent)
       field_opts_off(field[i], O_STATIC);
       set_field_opts(field[i], O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
   }
+  this->form = new_form(field);
 }
 
 //****************************************************************************
@@ -62,6 +63,8 @@ void ZTitle::refresh()
   set_field_buffer(this->field[0], 0, sDate.toStdString().c_str());
   set_field_buffer(this->field[1], 0, this->title.toStdString().c_str());
   set_field_buffer(this->field[2], 0, sHour.toStdString().c_str());
+  post_form(this->form);
+  refresh();
 }
 //****************************************************************************
 // ZBoard()
